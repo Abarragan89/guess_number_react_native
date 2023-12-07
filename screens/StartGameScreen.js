@@ -1,24 +1,26 @@
 import { TextInput, View, StyleSheet, Alert } from 'react-native'
 import { useState } from 'react';
-import PrimaryButton from '../components/PrimaryButton';
+import Title from '../components/ui/Title'
+import Colors from '../constants/colors';
+import PrimaryButton from '../components/ui/PrimaryButton';
 
-function StartGameScreen() {
+function StartGameScreen({ onPickNumber }) {
     const [enteredNumber, setEnterNumber] = useState('');
 
     function confirmInputHandler() {
         const chosenNumber = parseInt(enteredNumber);
-        if (isNaN(chosenNumber) ||chosenNumber <=0 || chosenNumber > 99) {
+        if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
             Alert.alert(
                 // title
                 'Invalid Number',
                 // message
                 'Number has to be between 1 and 99',
                 // buttons   
-                [{ text: 'Okay', style: 'destructive', onPress: resetInputHander}] 
+                [{ text: 'Okay', style: 'destructive', onPress: resetInputHander }]
             );
             return;
         }
-        console.log('valid numberr')
+        onPickNumber(enteredNumber)
     }
 
     function resetInputHander() {
@@ -26,28 +28,31 @@ function StartGameScreen() {
     }
 
     return (
-        <View style={styles.inputContainer}>
-            <TextInput
-                style={styles.numberInput}
-                maxLength={2}
-                keyboardType='number-pad'
-                // import for strings:
-                autoCapitalize='none'
-                autoCorrect={false}
-                value={enteredNumber}
-                onChangeText={(input) => setEnterNumber(input)}
-            />
-            <View style={styles.buttonsContainer}>
-                {/* Wrap buttons in view so they take all the space evenly and are same size */}
-                <View style={styles.buttonContainer}>
-                    <PrimaryButton
-                        onPress={resetInputHander}
-                    >Reset</PrimaryButton>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <PrimaryButton
-                        onPress={confirmInputHandler}
-                    >Confirm</PrimaryButton>
+        <View style={styles.rootContainer}>
+            <Title>Guess My Number</Title>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.numberInput}
+                    maxLength={2}
+                    keyboardType='number-pad'
+                    // import for strings:
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    value={enteredNumber}
+                    onChangeText={(input) => setEnterNumber(input)}
+                />
+                <View style={styles.buttonsContainer}>
+                    {/* Wrap buttons in view so they take all the space evenly and are same size */}
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton
+                            onPress={resetInputHander}
+                        >Reset</PrimaryButton>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton
+                            onPress={confirmInputHandler}
+                        >Confirm</PrimaryButton>
+                    </View>
                 </View>
             </View>
         </View>
@@ -55,13 +60,18 @@ function StartGameScreen() {
 }
 
 const styles = StyleSheet.create({
+    rootContainer: {
+        flex: 1,
+        marginTop: 100,
+        alignItems: 'center',
+    },
     inputContainer: {
         alignItems: 'center',
-        marginTop: 100,
         marginHorizontal: 24,
+        marginTop: 36,
         borderRadius: 8,
         padding: 16,
-        backgroundColor: '#4b0327',
+        backgroundColor: Colors.primary800,
         // Android Shadow
         elevation: 4,
         // IOS Shadow
@@ -75,9 +85,9 @@ const styles = StyleSheet.create({
         width: 75,
         textAlign: 'center',
         fontSize: 32,
-        borderBottomColor: '#ddb52f',
+        borderBottomColor: Colors.accentColor,
         borderBottomWidth: 2,
-        color: '#ddb52f',
+        color: Colors.accentColor,
         marginVertical: 8,
         fontWeight: 'bold',
     },
