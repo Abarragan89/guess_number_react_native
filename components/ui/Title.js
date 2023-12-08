@@ -10,13 +10,13 @@ function Title({ children }) {
 const styles = StyleSheet.create({
     title: {
         fontSize: 24,
+        // fontFamily: 'Inter_600SemiBold',
         fontWeight: 'bold',
         color: 'white',
         borderWidth: 2,
         borderColor: 'white',
         padding: 12,
-        width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
     }
 })
 
