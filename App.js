@@ -1,38 +1,29 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
-import { useFonts, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { LinearGradient } from 'expo-linear-gradient'
 import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import Colors from './constants/colors';
-import * as SplashScreen from 'expo-splash-screen';
 
-SplashScreen.preventAutoHideAsync();
 
 export default function App() {
 
-  // Load fonts
-  const [fontsLoaded] = useFonts({
-    Inter_600SemiBold
-  })
-
-  // Watch for fonts to be loaded, then hide the splash screen
-  useEffect(() => {
-    async function hideSplashScreen() {
-      await SplashScreen.hideAsync()
-    }
-    if (fontsLoaded) {
-      hideSplashScreen()
-    }
-  }, [fontsLoaded])
-
   const [userNumber, setUserNumber] = useState(null);
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [numberOfGuesses, setNumberOfGuesses] = useState(1)
+
 
   function pickedNumberHandler(pickedNumber) {
     setUserNumber(pickedNumber);
     setGameIsOver(false);
+  }
+
+  function startNewGameHandler(){
+    setUserNumber(null);
+    setGameIsOver(false);
+    setNumberOfGuesses(1)
+    screen = <StartGameScreen onPickNumber={pickedNumberHandler} />
   }
 
   let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />
@@ -41,19 +32,12 @@ export default function App() {
     setGameIsOver(true)
   }
   if (userNumber) {
-    screen = <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
+    screen = <GameScreen setNumberOfGuesses={setNumberOfGuesses} numberOfGuesses={numberOfGuesses} userNumber={userNumber} onGameOver={gameOverHandler} />
   }
 
   if (gameIsOver && userNumber) {
-    screen = <GameOverScreen />
+    screen = <GameOverScreen numberOfGuesses={numberOfGuesses} userNumber={userNumber} startNewGame={startNewGameHandler} />
   }
-
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // } else {
-  //   SplashScreen.hideAsync();
-  // }
 
 
   return (
