@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert, FlatList, SafeAreaView } from "react-native";
+import { View, StyleSheet, Alert, FlatList, useWindowDimensions } from "react-native";
 import { useState, useEffect } from "react";
 import Title from "../components/ui/Title";
 import Card from "../components/ui/Card";
@@ -11,10 +11,15 @@ import GuessLogItem from "../components/game/GuessLogItem";
 let minBoundary = 1;
 let maxBoundary = 100;
 
-function GameScreen({ userNumber, onGameOver, setNumberOfGuesses, numberOfGuesses }) {
-
+function GameScreen({
+    userNumber,
+    onGameOver,
+    setNumberOfGuesses,
+    numberOfGuesses
+}) {
     const [currentGuess, setCurrentGuess] = useState(null);
     const [guessRoundLogs, setGuessRoundLogs] = useState([]);
+    const { width, height } = useWindowDimensions();
 
 
     useEffect(() => {
@@ -64,42 +69,83 @@ function GameScreen({ userNumber, onGameOver, setNumberOfGuesses, numberOfGuesse
     const guessRoundsLength = guessRoundLogs.length;
 
     return (
-        <View style={styles.screen}>
-            <Title>Opponent's Guess</Title>
-            <NumberContainer>{currentGuess}</NumberContainer>
-            <View>
-                <Card>
-                    <InstructionText style={{ marginBottom: 20 }}>Higher or Lower?</InstructionText>
-                    <View style={styles.buttonsContainer}>
-                        <View style={styles.buttonContainer}>
-                            <PrimaryButton
-                                onPress={nextGuessHandler.bind(this, 'higher')}
-                                style={styles.button}>
-                                +
-                            </PrimaryButton>
-                        </View>
-                        <View style={styles.buttonContainer}>
-                            <PrimaryButton
-                                onPress={nextGuessHandler.bind(this, 'lower')}
-                                style={styles.button}>
-                                -
-                            </PrimaryButton>
-                        </View>
-                        {/* Round Logs */}
-                    </View>
-                </Card>
+        <>
+            {width < 450 ?
+                <View style={styles.screen}>
+                    <Title>Opponent's Guess</Title>
+                    <NumberContainer>{currentGuess}</NumberContainer>
+                    <View>
+                        <Card>
+                            <InstructionText style={{ marginBottom: 20 }}>Higher or Lower?</InstructionText>
+                            <View style={styles.buttonsContainer}>
+                                <View style={styles.buttonContainer}>
+                                    <PrimaryButton
+                                        onPress={nextGuessHandler.bind(this, 'higher')}
+                                        style={styles.button}>
+                                        +
+                                    </PrimaryButton>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <PrimaryButton
+                                        onPress={nextGuessHandler.bind(this, 'lower')}
+                                        style={styles.button}>
+                                        -
+                                    </PrimaryButton>
+                                </View>
+                                {/* Round Logs */}
+                            </View>
+                        </Card>
 
-                <View style={styles.roundLogListContainer}>
-                    <FlatList 
-                        data={guessRoundLogs}
-                        renderItem={(itemData) => <GuessLogItem guess={itemData.item} roundNumber={guessRoundsLength - itemData.index} />}
-                        keyExtractor={item => item}
-                    />
+                        <View style={styles.roundLogListContainer}>
+                            <FlatList
+                                data={guessRoundLogs}
+                                renderItem={(itemData) => <GuessLogItem guess={itemData.item} roundNumber={guessRoundsLength - itemData.index} />}
+                                keyExtractor={item => item}
+                            />
+                        </View>
+                    </View>
+                    <View>
+                    </View>
                 </View>
-            </View>
-            <View>
-            </View>
-        </View>
+                :
+                <View style={styles.screen}>
+                    <Title>Opponent's Guess</Title>
+                    <NumberContainer>{currentGuess}</NumberContainer>
+                    <View>
+                        <Card>
+                            <InstructionText style={{ marginBottom: 20 }}>Higher or Lower?</InstructionText>
+                            <View style={styles.buttonsContainer}>
+                                <View style={styles.buttonContainer}>
+                                    <PrimaryButton
+                                        onPress={nextGuessHandler.bind(this, 'higher')}
+                                        style={styles.button}>
+                                        +
+                                    </PrimaryButton>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <PrimaryButton
+                                        onPress={nextGuessHandler.bind(this, 'lower')}
+                                        style={styles.button}>
+                                        -
+                                    </PrimaryButton>
+                                </View>
+                                {/* Round Logs */}
+                            </View>
+                        </Card>
+
+                        <View style={styles.roundLogListContainer}>
+                            <FlatList
+                                data={guessRoundLogs}
+                                renderItem={(itemData) => <GuessLogItem guess={itemData.item} roundNumber={guessRoundsLength - itemData.index} />}
+                                keyExtractor={item => item}
+                            />
+                        </View>
+                    </View>
+                    <View>
+                    </View>
+                </View>
+            }
+        </>
     )
 }
 
@@ -110,6 +156,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingHorizontal: 24,
+        marginTop: 50
     },
 
     buttonsContainer: {

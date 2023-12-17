@@ -3,7 +3,7 @@
     "name": "guess_my_number_RN",
     "slug": "guess_my_number_RN",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

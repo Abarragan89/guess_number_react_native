@@ -1,4 +1,12 @@
-import { TextInput, View, StyleSheet, Alert } from 'react-native'
+import {
+    TextInput,
+    View,
+    StyleSheet,
+    Alert,
+    useWindowDimensions,
+    KeyboardAvoidingView,
+    ScrollView
+} from 'react-native'
 import { useState } from 'react';
 import Title from '../components/ui/Title'
 import Colors from '../constants/colors';
@@ -8,6 +16,9 @@ import PrimaryButton from '../components/ui/PrimaryButton';
 
 function StartGameScreen({ onPickNumber }) {
     const [enteredNumber, setEnterNumber] = useState('');
+
+    // this hook is listening for width and height changes
+    const { width, height } = useWindowDimensions()
 
     function confirmInputHandler() {
         const chosenNumber = parseInt(enteredNumber);
@@ -29,44 +40,56 @@ function StartGameScreen({ onPickNumber }) {
         setEnterNumber('')
     }
 
-    return (
-        <View style={styles.rootContainer}>
-            <Title>Guess My Number</Title>
-            <Card>
+    // this styles needs to be within the component to react to changes
+    const marginTopDistance = height < 450 ? 20 : 50;
 
-                <InstructionText>Pick a number</InstructionText>
-                <TextInput
-                    style={styles.numberInput}
-                    maxLength={2}
-                    keyboardType='number-pad'
-                    // import for strings:
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={enteredNumber}
-                    onChangeText={(input) => setEnterNumber(input)}
-                />
-                <View style={styles.buttonsContainer}>
-                    {/* Wrap buttons in view so they take all the space evenly and are same size */}
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton
-                            onPress={resetInputHander}
-                        >Reset</PrimaryButton>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton
-                            onPress={confirmInputHandler}
-                        >Confirm</PrimaryButton>
-                    </View>
+    return (
+        <ScrollView>
+            <KeyboardAvoidingView style={styles.root} behavior='position'>
+                <View style={[styles.rootContainer, { marginTop: marginTopDistance }]}>
+                    <Title>Guess My Number</Title>
+                    <Card>
+
+                        <InstructionText>Pick a number</InstructionText>
+                        <TextInput
+                            style={styles.numberInput}
+                            maxLength={2}
+                            keyboardType='number-pad'
+                            // import for strings:
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            value={enteredNumber}
+                            onChangeText={(input) => setEnterNumber(input)}
+                        />
+                        <View style={styles.buttonsContainer}>
+                            {/* Wrap buttons in view so they take all the space evenly and are same size */}
+                            <View style={styles.buttonContainer}>
+                                <PrimaryButton
+                                    onPress={resetInputHander}
+                                >Reset</PrimaryButton>
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                <PrimaryButton
+                                    onPress={confirmInputHandler}
+                                >Confirm</PrimaryButton>
+                            </View>
+                        </View>
+                    </Card>
                 </View>
-            </Card>
-        </View>
+            </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 
+export default StartGameScreen;
+
+
 const styles = StyleSheet.create({
+    root: {
+        flex: 1
+    },
     rootContainer: {
         flex: 1,
-        marginTop: 100,
         alignItems: 'center',
         marginHorizontal: 24
     },
@@ -91,5 +114,3 @@ const styles = StyleSheet.create({
         flex: 1
     }
 })
-
-export default StartGameScreen;
